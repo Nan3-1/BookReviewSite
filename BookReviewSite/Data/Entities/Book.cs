@@ -8,7 +8,11 @@
 
         public string Genre { get; set; }
 
-        public int AuthorId { get; set; }   
+        public int AuthorId { get; set; }
+
+       /// <summary>
+       /// /public int YearOfPublication { get; set; }
+       /// </summary>
 
         public virtual Author? Author { get; set; } 
     }

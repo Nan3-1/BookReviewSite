@@ -6,6 +6,9 @@
        public string Name { get; set; }
        public string LastName { get; set; }
        public int Age { get; set; }
-        public virtual ICollection<Book>? Books { get; set; }   
+       /// <summary>
+       /// public int BooksPublished { get; set; }
+       /// </summary>
+       public virtual ICollection<Book>? Books { get; set; }   
     }
 }
