@@ -20,10 +20,19 @@ namespace BookReviewSite.Controllers
         }
 
         // GET: Books
-        public async Task<IActionResult> Index()
+
+        public async Task<IActionResult> Index(string searchString)
         {
-            var applicationDbContext = _context.Book.Include(b => b.Author);
-            return View(await applicationDbContext.ToListAsync());
+            var books = _context.Book.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                // Simple case-insensitive search on Title and Author
+                books = books.Where(b =>
+                    b.Title.ToLower().Contains(searchString.ToLower()) );
+            }
+
+            return View(await books.ToListAsync());
         }
 
         // GET: Books/Details/5

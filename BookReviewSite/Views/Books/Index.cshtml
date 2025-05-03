@@ -43,5 +43,32 @@
             </td>
         </tr>
 }
+        <form asp-controller="Books" asp-action="Index" method="get" style="margin: 20px 0;">
+            <input type="text"
+                   name="searchString"
+                   placeholder="Search books..."
+                   style="padding: 8px; width: 200px;"
+                   value="@Context.Request.Query["searchString"]">
+            <button type="submit" style="padding: 8px;">Search</button>
+            <a asp-action="Index" style="margin-left: 10px;">Clear</a>
+        </form>
+
+        <!-- Basic book list -->
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr style="border-bottom: 1px solid #ddd;">
+                <th>Title</th>
+            </tr>
+            @foreach (var book in Model)
+            {
+                <tr style="border-bottom: 1px solid #ddd; padding: 8px;">
+                    <td>@book.Title</td>
+                </tr>
+            }
+        </table>
+
+        @if (!Model.Any())
+        {
+            <p style="margin-top: 20px; color: #666;">No books found.</p>
+        }
     </tbody>
 </table>
