@@ -8,8 +8,11 @@
 
         public string Genre { get; set; }
 
+        public Genres? Genre { get; set; }
+
         public int AuthorId { get; set; }   
 
         public virtual Author? Author { get; set; } 
     }
 }
+    

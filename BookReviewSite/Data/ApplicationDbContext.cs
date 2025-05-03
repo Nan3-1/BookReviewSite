@@ -13,5 +13,6 @@ namespace BookReview.Data
         public DbSet<BookReview.Data.Entities.Author> Author { get; set; } = default!;
         public DbSet<BookReview.Data.Entities.Book> Book { get; set; } = default!;
         public DbSet<BookReview.Data.Entities.Review> Review { get; set; } = default!;
+        public DbSet<BookReview.Data.Entities.Genres> Genre { get; set; } = default!;
     }
 }
