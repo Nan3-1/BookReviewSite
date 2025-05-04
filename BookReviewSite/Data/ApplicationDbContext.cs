@@ -6,13 +6,14 @@ namespace BookReview.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
+
         }
-        public DbSet<BookReview.Data.Entities.Author> Author { get; set; } = default!;
-        public DbSet<BookReview.Data.Entities.Book> Book { get; set; } = default!;
-        public DbSet<BookReview.Data.Entities.Review> Review { get; set; } = default!;
-        public DbSet<BookReview.Data.Entities.Genres> Genre { get; set; } = default!;
+        public DbSet<Author> Author { get; set; } = default!;
+        public DbSet<Book> Book { get; set; } = default!;
+        public DbSet<Review> Review { get; set; } = default!;
+        public DbSet<Genre> Genre { get; set; } = default!;
+
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookReview.Data;
 using BookReview.Data.Entities;
+using BookReviewSite.Models;
 
 namespace BookReviewSite.Controllers
 {
@@ -29,10 +30,15 @@ namespace BookReviewSite.Controllers
             {
                 // Simple case-insensitive search on Title and Author
                 books = books.Where(b =>
-                    b.Title.ToLower().Contains(searchString.ToLower()) );
+                    b.Title.ToLower().Contains(searchString.ToLower()) )
+
+                .Include(b => b.Genres)
+                .Include(b => b.Author);
             }
 
-            return View(await books.ToListAsync());
+            return View(await books
+                .Include(b => b.Genres)
+                .Include(b => b.Author).ToListAsync());
         }
 
         // GET: Books/Details/5
@@ -57,6 +63,7 @@ namespace BookReviewSite.Controllers
         // GET: Books/Create
         public IActionResult Create()
         {
+            ViewData["Genres"] = new MultiSelectList(_context.Genre, "GenreId", "Name");
             ViewData["AuthorId"] = new SelectList(_context.Author, "AuthorId", "FullName");
             return View();
         }
@@ -66,16 +73,33 @@ namespace BookReviewSite.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BookId,Title,Genre,AuthorId")] Book book)
+        public async Task<IActionResult> Create(BookViewModel model)
         {
             if (ModelState.IsValid)
             {
+                var genres = new List<Genre>();
+                foreach (var genreId in model.GenreIds)
+                {
+                    var genre = await _context.Genre.FindAsync(genreId);
+                    if (genre != null)
+                    {
+                        genres.Add(genre);
+                    }
+                }
+                Book book = new Book()
+                {
+                    BookId = model.BookId,
+                    Title = model.Title,
+                    AuthorId = model.AuthorId,
+                    Genres = genres
+                };
+
                 _context.Add(book);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Author, "AuthorId", "FullName", book.AuthorId);
-            return View(book);
+            ViewData["AuthorId"] = new SelectList(_context.Author, "AuthorId", "FullName", model.AuthorId);
+            return View(model);
         }
 
         // GET: Books/Edit/5

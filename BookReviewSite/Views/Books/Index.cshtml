@@ -16,7 +16,7 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Genre)
+                @Html.DisplayNameFor(model => model.Genres)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Author)
@@ -31,10 +31,10 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Genre)
+                @string.Join(", ", item.Genres.Select(g => g.Name).ToList())
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Author.AuthorId)
+                @Html.DisplayFor(modelItem => item.Author.FullName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a> |
