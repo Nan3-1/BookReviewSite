@@ -31,7 +31,7 @@ namespace BookReviewSite.Controllers
             {
                 // Simple case-insensitive search on Title and Author
                 books = books.Where(b =>
-                    b.Title.ToLower().Contains(searchString.ToLower()) )
+                    b.Title.ToLower().Contains(searchString.ToLower()))
 
                 .Include(b => b.Genres)
                 .Include(b => b.Author);
@@ -111,13 +111,27 @@ namespace BookReviewSite.Controllers
                 return NotFound();
             }
 
-            var book = await _context.Book.FindAsync(id);
+            var book = _context.Book
+                .Include(b => b.Author)
+                .Include(b => b.Genres)
+                .Where(b => b.BookId == id.Value)
+                .FirstOrDefault();
             if (book == null)
             {
                 return NotFound();
             }
+
+            var model = new BookViewModel()
+            {
+                BookId = book.BookId,
+                Title = book.Title,
+                AuthorId = book.AuthorId,
+                GenreIds = book.Genres
+                .Select(g => g.GenreId).ToList()
+            };
+            ViewData["Genres"] = new MultiSelectList(_context.Genre, "GenreId", "Name", model.GenreIds);
             ViewData["AuthorId"] = new SelectList(_context.Author, "AuthorId", "FullName", book.AuthorId);
-            return View(book);
+            return View(model);
         }
 
         // POST: Books/Edit/5
@@ -125,35 +139,48 @@ namespace BookReviewSite.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BookId,Title,Genre,AuthorId")] Book book)
+        public async Task<IActionResult> Edit(int id, BookViewModel model)
         {
-            if (id != book.BookId)
+            if (id != model.BookId)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
+                var genres = new List<Genre>();
+                foreach (var genreId in model.GenreIds)
                 {
-                    _context.Update(book);
+                    var genre = await _context.Genre.FindAsync(genreId);
+                    if (genre != null)
+                    {
+                        genres.Add(genre);
+                    }
+                }
+                var bookOriginal = await _context.Book
+                    .Include(b => b.Genres)
+                    .FirstOrDefaultAsync(b => b.BookId == id);
+
+                if (bookOriginal != null)
+                {
+                    bookOriginal.Genres.Clear();
+                    bookOriginal.Title = model.Title;
+                    bookOriginal.AuthorId = model.AuthorId;
+                    _context.Book.Update(bookOriginal);
+                    await _context.SaveChangesAsync();
+                    foreach (var genre in genres)
+                    {
+                        bookOriginal.Genres.Add(genre);
+                    }
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!BookExists(book.BookId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+               
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Author, "AuthorId", "FullName", book.AuthorId);
-            return View(book);
+            ViewData["Genres"] = new MultiSelectList(_context.Genre, "GenreId", "Name", model.GenreIds);
+
+            ViewData["AuthorId"] = new SelectList(_context.Author, "AuthorId", "FullName", model.AuthorId);
+            return View(model);
         }
 
         // GET: Books/Delete/5
