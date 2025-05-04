@@ -23,13 +23,12 @@ namespace BookReviewSite.Controllers
 
         public async Task<IActionResult> Index(string searchString)
         {
-            var books = _context.Book.AsQueryable();
+            var books = from b in _context.Book
+                        select b;
 
-            if (!string.IsNullOrEmpty(searchString))
+            if (!String.IsNullOrEmpty(searchString))
             {
-                // Simple case-insensitive search on Title and Author
-                books = books.Where(b =>
-                    b.Title.ToLower().Contains(searchString.ToLower()) );
+                books = books.Where(b => b.Title.Contains(searchString));
             }
 
             return View(await books.ToListAsync());
