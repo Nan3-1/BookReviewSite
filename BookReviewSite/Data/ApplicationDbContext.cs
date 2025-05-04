@@ -10,8 +10,8 @@ namespace BookReview.Data
             : base(options)
         {
         }
-        public DbSet<BookReview.Data.Entities.Author> Author { get; set; } = default!;
-        public DbSet<BookReview.Data.Entities.Book> Book { get; set; } = default!;
-        public DbSet<BookReview.Data.Entities.Review> Review { get; set; } = default!;
+        public DbSet<Author> Author { get; set; } = default!;
+        public DbSet<Book> Book { get; set; } = default!;
+        public DbSet<Review> Review { get; set; } = default!;
     }
 }
