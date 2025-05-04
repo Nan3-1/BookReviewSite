@@ -20,10 +20,19 @@ namespace BookReviewSite.Controllers
         }
 
         // GET: Books
-        public async Task<IActionResult> Index()
+
+        public async Task<IActionResult> Index(string searchString)
         {
-            var applicationDbContext = _context.Book.Include(b => b.Author);
-            return View(await applicationDbContext.ToListAsync());
+            var books = _context.Book.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                // Simple case-insensitive search on Title and Author
+                books = books.Where(b =>
+                    b.Title.ToLower().Contains(searchString.ToLower()) );
+            }
+
+            return View(await books.ToListAsync());
         }
 
         // GET: Books/Details/5
@@ -48,7 +57,7 @@ namespace BookReviewSite.Controllers
         // GET: Books/Create
         public IActionResult Create()
         {
-            ViewData["AuthorId"] = new SelectList(_context.Author, "AuthorId", "AuthorId");
+            ViewData["AuthorId"] = new SelectList(_context.Author, "AuthorId", "FullName");
             return View();
         }
 
@@ -65,7 +74,7 @@ namespace BookReviewSite.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Author, "AuthorId", "AuthorId", book.AuthorId);
+            ViewData["AuthorId"] = new SelectList(_context.Author, "AuthorId", "FullName", book.AuthorId);
             return View(book);
         }
 
@@ -82,7 +91,7 @@ namespace BookReviewSite.Controllers
             {
                 return NotFound();
             }
-            ViewData["AuthorId"] = new SelectList(_context.Author, "AuthorId", "AuthorId", book.AuthorId);
+            ViewData["AuthorId"] = new SelectList(_context.Author, "AuthorId", "FullName", book.AuthorId);
             return View(book);
         }
 
@@ -118,7 +127,7 @@ namespace BookReviewSite.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Author, "AuthorId", "AuthorId", book.AuthorId);
+            ViewData["AuthorId"] = new SelectList(_context.Author, "AuthorId", "FullName", book.AuthorId);
             return View(book);
         }
 
