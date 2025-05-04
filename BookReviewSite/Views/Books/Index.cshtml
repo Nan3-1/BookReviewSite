@@ -21,25 +21,63 @@
 <table class="table">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.Title)</th>
-            <th>@Html.DisplayNameFor(model => model.Genre)</th>
-            <th>@Html.DisplayNameFor(model => model.Author.FullName)</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Genres)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Title</td>
-                <td>@item.Genre</td>
-                <td>@item.Author?.FullName</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.BookId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
-                </td>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @string.Join(", ", item.Genres.Select(g => g.Name).ToList())
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author.FullName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.BookId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
+            </td>
+        </tr>
+}
+        <form asp-controller="Books" asp-action="Index" method="get" style="margin: 20px 0;">
+            <input type="text"
+                   name="searchString"
+                   placeholder="Search books..."
+                   style="padding: 8px; width: 200px;"
+                   value="@Context.Request.Query["searchString"]">
+            <button type="submit" style="padding: 8px;">Search</button>
+            <a asp-action="Index" style="margin-left: 10px;">Clear</a>
+        </form>
+
+        <!-- Basic book list -->
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr style="border-bottom: 1px solid #ddd;">
+                <th>Title</th>
             </tr>
+            @foreach (var book in Model)
+            {
+                <tr style="border-bottom: 1px solid #ddd; padding: 8px;">
+                    <td>@book.Title</td>
+                </tr>
+            }
+        </table>
+
+        @if (!Model.Any())
+        {
+            <p style="margin-top: 20px; color: #666;">No books found.</p>
         }
     </tbody>
 </table>
