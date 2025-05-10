@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -7,12 +7,23 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BookReviewSite.styles.css" asp-append-version="true" />
+    <!-- library for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <script>
+        document.documentElement.setAttribute('data-bs-theme', 
+            localStorage.getItem('theme') || 'light');
+    </script>
+
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BookReviewSite</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-book-open me-2"></i>
+                    <span class="site-title">BookReviewSite</span>
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -20,38 +31,57 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home me-1"></i>Home
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                <i class="fas fa-shield-alt me-1"></i>Privacy
+                            </a>
                         </li>
-
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Genres" asp-action="Index">
+                                <i class="fas fa-tags me-1"></i>Genres
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Authors" asp-action="Index">
+                                <i class="fas fa-user-edit me-1"></i>Authors
+                            </a>
+                        </li>
                         <li class="nav-item dropdown" id="booksDropdown">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Books" asp-action="Index">Books</a>
+                            <a class="nav-link" asp-area="" asp-controller="Books" asp-action="Index">
+                                <i class="fas fa-book me-1"></i>Books
+                            </a>
                             <ul class="dropdown-menu">
                                 <li class="dropdown-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Favorite Books" asp-action="Index">Favorite Books</a>
+                                    <a class="nav-link" asp-area="" asp-controller="Favorite Books" asp-action="Index">
+                                        <i class="fas fa-heart me-1"></i>Favorite Books
+                                    </a>
                                 </li>
                                 <li class="dropdown-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Curently Reading" asp-action="Index">Currently Reading</a>
+                                    <a class="nav-link" asp-area="" asp-controller="Curently Reading" asp-action="Index">
+                                        <i class="fas fa-book-reader me-1"></i>Currently Reading
+                                    </a>
                                 </li>
                                 <li class="dropdown-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Wants to Read" asp-action="Index">Wants To Read</a>
-                                </li> 
+                                    <a class="nav-link" asp-area="" asp-controller="Wants to Read" asp-action="Index">
+                                        <i class="fas fa-bookmark me-1"></i>Wants To Read
+                                    </a>
+                                </li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Genres" asp-action="Index">Genres</a>
-
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Authors" asp-action="Index">Authors</a>
-                        </li>
-
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
+
+                <div class="ms-auto me-3">
+                    <button id="themeToggle" class="btn btn-link p-0 border-0">
+                        <i class="fas fa-moon" id="themeIcon"></i>  
+                    </button>
+                </div>
+
             </div>
         </nav>
     </header>
@@ -70,5 +100,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/js/themeToggle.js"></script>
 </body>
 </html>
