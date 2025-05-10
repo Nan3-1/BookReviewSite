@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookReview.Data;
-using BookReview.Data.Entities;
+using BookReviewSite.Data.Entities;
 
 namespace BookReviewSite.Controllers
 {

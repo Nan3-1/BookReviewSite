@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using BookReview.Data;
-using BookReview.Data.Entities;
+using BookReviewSite.Data;
 using BookReviewSite.Models;
+using BookReviewSite.Data.Entities;
+using BookReview.Data;
 
 namespace BookReviewSite.Controllers
 {
@@ -31,7 +32,7 @@ namespace BookReviewSite.Controllers
             {
                 // Simple case-insensitive search on Title and Author
                 books = books.Where(b =>
-                    b.Title.ToLower().Contains(searchString.ToLower()))
+                    b.Title.Contains(searchString, StringComparison.CurrentCultureIgnoreCase))
 
                 .Include(b => b.Genres)
                 .Include(b => b.Author);
@@ -57,7 +58,12 @@ namespace BookReviewSite.Controllers
             {
                 return NotFound();
             }
+                 var reviews = await _context.Review
+                .Where(r => r.BookId == book.BookId)
+                .OrderByDescending(r => r.DatePosted)
+                .ToListAsync();
 
+            ViewBag.Reviews = reviews;
             return View(book);
         }
 
@@ -126,8 +132,7 @@ namespace BookReviewSite.Controllers
                 BookId = book.BookId,
                 Title = book.Title,
                 AuthorId = book.AuthorId,
-                GenreIds = book.Genres
-                .Select(g => g.GenreId).ToList()
+                GenreIds = [.. book.Genres.Select(g => g.GenreId)]
             };
             ViewData["Genres"] = new MultiSelectList(_context.Genre, "GenreId", "Name", model.GenreIds);
             ViewData["AuthorId"] = new SelectList(_context.Author, "AuthorId", "FullName", book.AuthorId);

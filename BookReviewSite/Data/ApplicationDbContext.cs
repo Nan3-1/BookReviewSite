@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using BookReview.Data.Entities;
+using BookReviewSite.Data.Entities;
 
 namespace BookReview.Data
 {
