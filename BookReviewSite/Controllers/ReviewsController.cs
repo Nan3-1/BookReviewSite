@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using BookReview.Data;
 using BookReviewSite.Data.Entities;
+using BookReviewSite.Data;
 
 namespace BookReviewSite.Controllers
 {
@@ -22,7 +22,7 @@ namespace BookReviewSite.Controllers
         // GET: Reviews
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Review.Include(r => r.Book);
+            var applicationDbContext = _context.Reviews.Include(r => r.Book);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -34,7 +34,7 @@ namespace BookReviewSite.Controllers
                 return NotFound();
             }
 
-            var review = await _context.Review
+            var review = await _context.Reviews
                 .Include(r => r.Book)
                 .FirstOrDefaultAsync(m => m.ReviewId == id);
             if (review == null)
@@ -48,7 +48,7 @@ namespace BookReviewSite.Controllers
         // GET: Reviews/Create
         public IActionResult Create()
         {
-            ViewData["BookId"] = new SelectList(_context.Book, "BookId", "BookId");
+            ViewData["BookId"] = new SelectList(_context.Books, "BookId", "BookId");
             return View();
         }
 
@@ -65,7 +65,7 @@ namespace BookReviewSite.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BookId"] = new SelectList(_context.Book, "BookId", "BookId", review.BookId);
+            ViewData["BookId"] = new SelectList(_context.Books, "BookId", "BookId", review.BookId);
             return View(review);
         }
 
@@ -77,12 +77,12 @@ namespace BookReviewSite.Controllers
                 return NotFound();
             }
 
-            var review = await _context.Review.FindAsync(id);
+            var review = await _context.Reviews.FindAsync(id);
             if (review == null)
             {
                 return NotFound();
             }
-            ViewData["BookId"] = new SelectList(_context.Book, "BookId", "BookId", review.BookId);
+            ViewData["BookId"] = new SelectList(_context.Books, "BookId", "BookId", review.BookId);
             return View(review);
         }
 
@@ -118,7 +118,7 @@ namespace BookReviewSite.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BookId"] = new SelectList(_context.Book, "BookId", "BookId", review.BookId);
+            ViewData["BookId"] = new SelectList(_context.Books, "BookId", "BookId", review.BookId);
             return View(review);
         }
 
@@ -130,7 +130,7 @@ namespace BookReviewSite.Controllers
                 return NotFound();
             }
 
-            var review = await _context.Review
+            var review = await _context.Reviews
                 .Include(r => r.Book)
                 .FirstOrDefaultAsync(m => m.ReviewId == id);
             if (review == null)
@@ -146,10 +146,10 @@ namespace BookReviewSite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var review = await _context.Review.FindAsync(id);
+            var review = await _context.Reviews.FindAsync(id);
             if (review != null)
             {
-                _context.Review.Remove(review);
+                _context.Reviews.Remove(review);
             }
 
             await _context.SaveChangesAsync();
@@ -158,7 +158,7 @@ namespace BookReviewSite.Controllers
 
         private bool ReviewExists(int id)
         {
-            return _context.Review.Any(e => e.ReviewId == id);
+            return _context.Reviews.Any(e => e.ReviewId == id);
         }
     }
 }

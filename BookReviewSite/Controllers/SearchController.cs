@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BookReview.Models;
-using BookReview.Data;
+using BookReviewSite.Models;
+using BookReviewSite.Data;
 
 public class SearchController : Controller // Ensure the controller inherits from Controller
 {
@@ -14,7 +14,7 @@ public class SearchController : Controller // Ensure the controller inherits fro
 
     public async Task<IActionResult> Index(string q)
     {
-        var books = await _context.Book
+        var books = await _context.Books
             .Include(b => b.Author)
             .ToListAsync();
 
@@ -24,6 +24,7 @@ public class SearchController : Controller // Ensure the controller inherits fro
             .ToList();
 
         var filteredAuthors = _context.Author.Where(b => b.Name.Contains(q, StringComparison.CurrentCultureIgnoreCase) || b.LastName.Contains(q, StringComparison.CurrentCultureIgnoreCase))
+
             .ToList();
 
         var viewModel = new SearchResultsViewModel()
@@ -33,6 +34,6 @@ public class SearchController : Controller // Ensure the controller inherits fro
             Authors = filteredAuthors
         };
 
-        return View(viewModel); // ✅ This matches the @model in your view
+        return View(viewModel); 
     }
 }

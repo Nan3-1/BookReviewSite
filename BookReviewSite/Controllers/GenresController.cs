@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using BookReview.Data;
 using BookReviewSite.Data.Entities;
+using BookReviewSite.Data;
 
 namespace BookReviewSite.Controllers
 {
@@ -22,7 +22,7 @@ namespace BookReviewSite.Controllers
         // GET: Genres
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Genre.ToListAsync());
+            return View(await _context.Genres.ToListAsync());
         }
 
         // GET: Genres/Details/5
@@ -33,7 +33,7 @@ namespace BookReviewSite.Controllers
                 return NotFound();
             }
 
-            var genre = await _context.Genre
+            var genre = await _context.Genres
                 .FirstOrDefaultAsync(m => m.GenreId == id);
             if (genre == null)
             {
@@ -73,7 +73,7 @@ namespace BookReviewSite.Controllers
                 return NotFound();
             }
 
-            var genre = await _context.Genre.FindAsync(id);
+            var genre = await _context.Genres.FindAsync(id);
             if (genre == null)
             {
                 return NotFound();
@@ -124,7 +124,7 @@ namespace BookReviewSite.Controllers
                 return NotFound();
             }
 
-            var genre = await _context.Genre
+            var genre = await _context.Genres
                 .FirstOrDefaultAsync(m => m.GenreId == id);
             if (genre == null)
             {
@@ -139,10 +139,10 @@ namespace BookReviewSite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var genre = await _context.Genre.FindAsync(id);
+            var genre = await _context.Genres.FindAsync(id);
             if (genre != null)
             {
-                _context.Genre.Remove(genre);
+                _context.Genres.Remove(genre);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +151,7 @@ namespace BookReviewSite.Controllers
 
         private bool GenreExists(int id)
         {
-            return _context.Genre.Any(e => e.GenreId == id);
+            return _context.Genres.Any(e => e.GenreId == id);
         }
     }
 }

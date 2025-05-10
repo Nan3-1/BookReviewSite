@@ -1,4 +1,9 @@
 using BookReview.Data;
+using BookReview.Data.Entities;
+using BookReviewSite.Data;
+using BookReviewSite.Data.Entities;
+using BookReviewSite.Data.Seeders;
+using BookReviewSite.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,12 +21,17 @@ namespace BookReview
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
-
             var app = builder.Build();
+           using (var scope = app.Services.CreateScope())
+           {
+              var services = scope.ServiceProvider;
+              DataSeeder.Initialize(services).Wait();
 
+           }
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
