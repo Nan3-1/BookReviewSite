@@ -1,32 +1,85 @@
 ﻿@model IEnumerable<BookReviewSite.Data.Entities.Book>
 
-<h2>Favorite Books</h2>
+@{
+    ViewBag.Title = "Favorite Books";
+}
 
-@if (Model != null && Model.Any())
-{
-    <ul>
-        @foreach (var book in Model)
-        {
-            <li>
-                <strong>@book.Title</strong> by @book.Author?.Name
-                <form asp-controller="UserBooks" asp-action="AddToList" method="post">
-                    <input type="hidden" name="bookId" value="@book.BookId" />
-                    <input type="hidden" name="status" value="Favorite" />
-                    <button type="submit">Add to Favorites</button>
-                </form>
-                <form asp-controller="UserBooks" asp-action="RemoveFromList" method="post">
-                    <input type="hidden" name="bookId" value="@book.BookId" />
-                    <button type="submit">Remove</button>
-                </form>
-            </li>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-4">Favorite Books</h1>
+        <a href="@Url.Action("Index", "Books")" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left mr-2"></i>Back to Catalog
+        </a>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var book in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">@book.Title</h5>
+                            <h6 class="card-subtitle mb-3 text-muted">by @book.Author?.Name</h6>
+                            
+                            <div class="mb-3">
+                                @foreach (var genre in book.Genres.Take(2))
+                                {
+                                    <span class="badge badge-primary">@genre.Name</span>
+                                }
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <form asp-controller="UserBooks" asp-action="RemoveFromList" method="post" class="d-inline">
+                                <input type="hidden" name="bookId" value="@book.BookId" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="fas fa-heart-broken mr-1"></i>Remove
+                                </button>
+                            </form>
+                            <a href="@Url.Action("Details", "Books", new { id = book.BookId })" 
+                               class="btn btn-sm btn-outline-primary float-right">
+                                <i class="fas fa-info-circle mr-1"></i>Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info shadow">
+            <i class="fas fa-info-circle mr-2"></i>
+            You don't have any favorite books yet. Start by exploring our 
+            <a href="@Url.Action("Index", "Books")" class="alert-link">book catalog</a>.
+        </div>
+    }
+</div>
+
+@section Styles {
+    <style>
+        .card {
+            transition: transform 0.3s ease;
+            border-radius: 0.5rem;
         }
-    </ul>
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .badge {
+            font-size: 0.85em;
+            padding: 0.35em 0.65em;
+        }
+        
+        .card-footer {
+            border-top: none;
+            background-color: rgba(0,0,0,0.03);
+        }
+    </style>
 }
-else
-{
-    <p>You have no favorite books.</p>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 }
-
-
-
-

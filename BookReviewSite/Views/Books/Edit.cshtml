@@ -1,43 +1,115 @@
 ﻿@model BookReviewSite.Models.BookViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewBag.Title = "Edit Book";
 }
 
-<h1>Edit</h1>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0">Edit Book</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        <input type="hidden" asp-for="BookId" />
 
-<h4>Book</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="BookId" />
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="Title" class="font-weight-bold"></label>
+                            <input asp-for="Title" class="form-control" required />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="AuthorId" class="font-weight-bold"></label>
+                            <select asp-for="AuthorId" class="form-control" asp-items="ViewBag.AuthorId" required>
+                                <option value="">-- Select Author --</option>
+                            </select>
+                            <span asp-validation-for="AuthorId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="GenreIds" class="font-weight-bold"></label>
+                            <select multiple="multiple" asp-for="GenreIds" class="form-control" asp-items="@ViewBag.Genres" required>
+                            </select>
+                            <small class="form-text text-muted">Hold Ctrl to select multiple genres</small>
+                            <span asp-validation-for="GenreIds" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="font-weight-bold">Cover Image</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="customFile">
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save mr-2"></i>Save Changes
+                            </button>
+                            <a href="@Url.Action("Details", new { id = Model.BookId })" class="btn btn-outline-secondary">
+                                <i class="fas fa-times mr-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="AuthorId" class="control-label"></label>
-                <select asp-for="AuthorId" class="form-control" asp-items="ViewBag.AuthorId"></select>
-                <span asp-validation-for="AuthorId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GenreIds" class="control-label"></label>
-                <select multiple="multiple" asp-for="GenreIds" class="form-control" asp-items="@ViewBag.Genres"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@section Styles {
+    <style>
+        .card {
+            border-radius: 0.5rem;
+        }
+
+        .custom-file-label::after {
+            content: "Browse";
+        }
+
+        .form-control {
+            border-radius: 0.25rem;
+        }
+
+        select[multiple] {
+            min-height: 150px;
+        }
+    </style>
+}
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <script>
+        // Bootstrap file input
+        $('.custom-file-input').on('change', function() {
+            let fileName = $(this).val().split('\\').pop();
+            $(this).next('.custom-file-label').addClass("selected").html(fileName);
+        });
+
+        // Form validation
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

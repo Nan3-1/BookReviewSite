@@ -1,64 +1,113 @@
-﻿@using BookReviewSite.Data.Entities
-@model IEnumerable<Book>
+﻿@model IEnumerable<BookReviewSite.Data.Entities.Book>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewBag.Title = "Books";
 }
 
-<h1>Books</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-4">Book Catalog</h1>
+        <a href="@Url.Action("Create")" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add New Book
+        </a>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form asp-action="Index" method="get" class="form-inline">
+                <div class="input-group w-100">
+                    <input type="text" name="searchString" value="@ViewData["CurrentFilter"]"
+                           class="form-control" placeholder="Search by title..." />
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
-<form asp-action="Index" method="get">
-    <p>
-        <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" placeholder="Search by title..." />
-        <input type="submit" value="Search" class="btn btn-primary" />
-    </p>
-</form>
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Title</th>
+                        <th>Genres</th>
+                        <th>Author</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="align-middle">@item.Title</td>
+                            <td class="align-middle">
+                                <div class="d-flex flex-wrap">
+                                    @foreach (var genre in item.Genres.Take(3))
+                                    {
+                                        <span class="badge badge-primary mr-1 mb-1">@genre.Name</span>
+                                    }
+                                    @if (item.Genres.Count > 3)
+                                    {
+                                        <span class="badge badge-light">+@(item.Genres.Count - 3)</span>
+                                    }
+                                </div>
+                            </td>
+                            <td class="align-middle">@item.Author?.FullName</td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <a href="@Url.Action("Edit", new { id = item.BookId })"
+                                       class="btn btn-sm btn-outline-primary" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="@Url.Action("Details", new { id = item.BookId })"
+                                       class="btn btn-sm btn-outline-info" title="Details">
+                                        <i class="fas fa-info-circle"></i>
+                                    </a>
+                                    <a href="@Url.Action("Delete", new { id = item.BookId })"
+                                       class="btn btn-sm btn-outline-danger" title="Delete">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info shadow">
+            <i class="fas fa-info-circle mr-2"></i>
+            No books found. Would you like to <a href="@Url.Action("Create")" class="alert-link">add a new book</a>?
+        </div>
+    }
+</div>
 
+@section Styles {
+    <style>
+        .table-hover tbody tr:hover {
+            background-color: rgba(108, 117, 125, 0.1);
+            transition: background-color 0.3s ease;
+        }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Genres)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Author)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @string.Join(", ", item.Genres.Select(g => g.Name).ToList())
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author.FullName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BookId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
-            </td>
-        </tr>
+        .badge {
+            font-size: 0.85em;
+            padding: 0.35em 0.65em;
+        }
+
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+        }
+    </style>
 }
-    
 
-
-    </tbody>
-</table>
-@if (!Model.Any())
-{
-    <p style="margin-top: 20px; color: #666;">No books found.</p>
+@section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 }
