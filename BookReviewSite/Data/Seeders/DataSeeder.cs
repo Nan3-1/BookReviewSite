@@ -1,4 +1,5 @@
-﻿using BookReview.Data.Entities;
+﻿using BookReviewSite.Data.Entities;
+
 
 namespace BookReviewSite.Data.Seeders
 {
@@ -100,5 +101,6 @@ namespace BookReviewSite.Data.Seeders
                 await context.SaveChangesAsync();
             }
         }
+
     }
 }

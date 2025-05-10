@@ -1,5 +1,4 @@
-﻿using BookReview.Data.Entities;
-using BookReviewSite.Data.Entities;
+﻿using BookReviewSite.Data.Entities;
 
 namespace BookReviewSite.Models
 {

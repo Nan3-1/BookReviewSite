@@ -1,5 +1,4 @@
 ﻿// UserBook.cs
-using BookReview.Data.Entities;
 using BookReviewSite.Data.Entities;
 
 public class UserBook

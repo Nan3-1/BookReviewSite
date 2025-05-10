@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using BookReview.Data.Entities;
+using BookReviewSite.Data.Entities;
 using BookReviewSite.Models;
 
 namespace BookReviewSite.ViewModels

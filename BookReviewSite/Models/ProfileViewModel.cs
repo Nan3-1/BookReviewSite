@@ -1,5 +1,5 @@
 ﻿// ViewModels/ProfileViewModel.cs
-using BookReview.Data.Entities;
+using BookReviewSite.Data.Entities;
 using BookReviewSite.Models;
 using System.Collections.Generic;
 

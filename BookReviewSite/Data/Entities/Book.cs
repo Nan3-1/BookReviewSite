@@ -1,7 +1,7 @@
-﻿namespace BookReviewSite.Data.Entities
+﻿namespace BookReviewSite.Data.Entities;
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-{
+
     public class Book
     {
         public int BookId { get; set; } 
@@ -20,5 +20,5 @@
         public virtual Author? Author { get; set; }
 
     }
-}
+
     

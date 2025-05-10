@@ -1,4 +1,4 @@
-﻿using BookReview.Data.Entities;
+﻿using BookReviewSite.Data.Entities;
 using BookReviewSite.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;

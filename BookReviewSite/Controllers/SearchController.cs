@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using BookReviewSite.Models;
 using BookReviewSite.Data;
+using BookReview.Models;
 
 public class SearchController : Controller // Ensure the controller inherits from Controller
 {
@@ -23,7 +24,7 @@ public class SearchController : Controller // Ensure the controller inherits fro
                         (b.Author?.FullName?.ToLower().Contains(q, StringComparison.CurrentCultureIgnoreCase) ?? false))
             .ToList();
 
-        var filteredAuthors = _context.Author.Where(b => b.Name.Contains(q, StringComparison.CurrentCultureIgnoreCase) || b.LastName.Contains(q, StringComparison.CurrentCultureIgnoreCase))
+        var filteredAuthors = _context.Authors.Where(b => b.Name.Contains(q, StringComparison.CurrentCultureIgnoreCase) || b.LastName.Contains(q, StringComparison.CurrentCultureIgnoreCase))
 
             .ToList();
 

@@ -1,0 +1,20 @@
+﻿   @model IEnumerable<BookReviewSite.Data.Entities.Book>
+
+<h2>Currently Reading</h2>
+
+@if (Model != null && Model.Any())
+{
+    <ul>
+        @foreach (var book in Model)
+        {
+            <li>
+                <strong>@book.Title</strong> by @book.Author?.Name
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>You are not currently reading any books.</p>
+}
+

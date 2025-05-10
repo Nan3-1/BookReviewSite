@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BookReviewSite.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Intial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -62,7 +62,7 @@ namespace BookReviewSite.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Age = table.Column<int>(type: "int", nullable: false),
-                    Autobiography = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Autobiography = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -241,8 +241,9 @@ namespace BookReviewSite.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ReviewerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ReviewContent = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ReviewRating = table.Column<int>(type: "int", nullable: false),
                     BookId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -267,15 +268,14 @@ namespace BookReviewSite.Migrations
                 name: "UserBooks",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     BookId = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false)
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserBooks", x => x.Id);
+                    table.PrimaryKey("PK_UserBooks", x => new { x.UserId, x.BookId, x.Status });
                     table.ForeignKey(
                         name: "FK_UserBooks_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -294,15 +294,16 @@ namespace BookReviewSite.Migrations
                 name: "UserBookViewModels",
                 columns: table => new
                 {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     BookId = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false),
                     AddedDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserBookViewModels", x => new { x.UserId, x.BookId, x.Status });
+                    table.PrimaryKey("PK_UserBookViewModels", x => x.Id);
                     table.ForeignKey(
                         name: "FK_UserBookViewModels_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -382,14 +383,14 @@ namespace BookReviewSite.Migrations
                 column: "BookId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserBooks_UserId",
-                table: "UserBooks",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_UserBookViewModels_BookId",
                 table: "UserBookViewModels",
                 column: "BookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserBookViewModels_UserId",
+                table: "UserBookViewModels",
+                column: "UserId");
         }
 
         /// <inheritdoc />

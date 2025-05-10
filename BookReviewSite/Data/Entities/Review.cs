@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using BookReviewSite.Data.Entities;
 
-﻿namespace BookReviewSite.Data.Entities;
-{
+
     public class Review
     {
         public int ReviewId { get; set; }
@@ -15,15 +15,13 @@ using BookReviewSite.Data.Entities;
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
 
-
-        public string ReviewContent { get; set; }
         public int ReviewRating { get; set; }
         public int BookId { get; set; } 
 
         public virtual Book? Book { get; set; }
+        [NotMapped]
         public object DatePosted { get; internal set; }
 
-        public Book Book { get; set; }
 
     }
-}
+

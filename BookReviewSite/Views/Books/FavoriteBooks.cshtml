@@ -1,0 +1,32 @@
+﻿@model IEnumerable<BookReviewSite.Data.Entities.Book>
+
+<h2>Favorite Books</h2>
+
+@if (Model != null && Model.Any())
+{
+    <ul>
+        @foreach (var book in Model)
+        {
+            <li>
+                <strong>@book.Title</strong> by @book.Author?.Name
+                <form asp-controller="UserBooks" asp-action="AddToList" method="post">
+                    <input type="hidden" name="bookId" value="@book.BookId" />
+                    <input type="hidden" name="status" value="Favorite" />
+                    <button type="submit">Add to Favorites</button>
+                </form>
+                <form asp-controller="UserBooks" asp-action="RemoveFromList" method="post">
+                    <input type="hidden" name="bookId" value="@book.BookId" />
+                    <button type="submit">Remove</button>
+                </form>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>You have no favorite books.</p>
+}
+
+
+
+

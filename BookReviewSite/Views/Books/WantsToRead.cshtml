@@ -1,0 +1,20 @@
+﻿@model IEnumerable<BookReviewSite.Data.Entities.Book>
+
+<h2>Wants to Read</h2>
+
+@if (Model != null && Model.Any())
+{
+    <ul>
+        @foreach (var book in Model)
+        {
+            <li>
+                <strong>@book.Title</strong> by @book.Author?.Name
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>You have no books in your "Wants to Read" list.</p>
+}
+
