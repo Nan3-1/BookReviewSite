@@ -1,20 +1,16 @@
 ﻿using BookReview.Data.Entities;
+using BookReviewSite.Data.Entities;
 
 namespace BookReviewSite.Models
 {
-    public enum BookStatus
-    {
-        Favorite,
-        WantToRead,
-        CurrentlyReading
-    }
-
     public class UserBookViewModels
     {
+        internal object? IsFavorite;
+
         public int Id { get; set; }
         public string UserId { get; set; }
         public int BookId { get; set; }
-        public BookStatus Status { get; set; }
+        public BookStatusType Status { get; set; }
         public DateTime AddedDate { get; set; } = DateTime.Now;
 
         public ApplicationUser User { get; set; }

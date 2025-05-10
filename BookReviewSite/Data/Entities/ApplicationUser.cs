@@ -1,8 +1,9 @@
 ﻿using BookReview.Data.Entities;
+using BookReviewSite.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 
-namespace BookReviewSite.Models
+namespace BookReviewSite.Data.Entities
 {
     public class ApplicationUser : IdentityUser
     {

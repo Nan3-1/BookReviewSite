@@ -2,6 +2,7 @@
 using BookReviewSite.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
+using BookReviewSite.Data.Entities;
 
 namespace BookReviewSite.Controllers
 {

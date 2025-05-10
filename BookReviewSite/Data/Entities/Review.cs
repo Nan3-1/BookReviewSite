@@ -1,14 +1,12 @@
 ﻿using System.ComponentModel;
 using BookReview.Data.Entities;
-using BookReviewSite.Models;
+using BookReviewSite.Data.Entities;
 
 namespace BookReview.Data.Entities
 {
     public class Review
     {
-        internal readonly int ReviewId;
-
-        public int Id { get; set; }
+        public int ReviewId { get; set; }
         public string Content { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 

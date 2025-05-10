@@ -7,6 +7,7 @@ using System.Linq;
 using BookReviewSite.Data;
 using BookReviewSite.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using BookReviewSite.Data.Entities;
 
 namespace BookReviewSite.Controllers
 {
@@ -33,15 +34,15 @@ namespace BookReviewSite.Controllers
                 Bio = user.Bio,
                 ProfilePicture = user.ProfilePicture,
                 FavoriteBooks = _context.UserBooks
-                    .Where(ub => ub.UserId == user.Id && ub.Status == BookStatus.Favorite)
+                    .Where(ub => ub.UserId == user.Id && ub.Status == BookStatusType.Favorite)
                     .Take(3)
                     .ToList(),
                 WantToRead = _context.UserBooks
-                    .Where(ub => ub.UserId == user.Id && ub.Status == BookStatus.WantToRead)
+                    .Where(ub => ub.UserId == user.Id && ub.Status == BookStatusType.WantToRead)
                     .Take(3)
                     .ToList(),
                 CurrentlyReading = _context.UserBooks
-                    .Where(ub => ub.UserId == user.Id && ub.Status == BookStatus.CurrentlyReading)
+                    .Where(ub => ub.UserId == user.Id && ub.Status == BookStatusType.CurrentlyReading)
                     .Take(3)
                     .ToList(),
                 Reviews = _context.Reviews
@@ -83,10 +84,10 @@ namespace BookReviewSite.Controllers
         }
         // In ProfileController
         [HttpPost]
-        public async Task<IActionResult> AddBook(int bookId, BookStatus status)
+        public async Task<IActionResult> AddBook(int bookId, BookStatusType status)
         {
             var user = await _userManager.GetUserAsync(User);
-            var userBook = new UserBookViewModels
+            var userBook = new UserBook
             {
                 UserId = user.Id,
                 BookId = bookId,
@@ -100,7 +101,7 @@ namespace BookReviewSite.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RemoveBook(int bookId, BookStatus status)
+        public async Task<IActionResult> RemoveBook(int bookId, BookStatusType status)
         {
             var user = await _userManager.GetUserAsync(User);
             var userBook = await _context.UserBooks
