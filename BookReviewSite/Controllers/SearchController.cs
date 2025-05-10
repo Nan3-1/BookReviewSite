@@ -3,6 +3,7 @@ using BookReview.Data;
 using Microsoft.EntityFrameworkCore;
 using BookReview.Models;
 using BookReview.Data.Entities;
+using BookReviewSite.Data;
 
 public class SearchController : Controller // Ensure the controller inherits from Controller
 {
@@ -15,7 +16,7 @@ public class SearchController : Controller // Ensure the controller inherits fro
 
     public async Task<IActionResult> Index(string q)
     {
-        var books = await _context.Book
+        var books = await _context.Books
             .Include(b => b.Author)
             .ToListAsync();
 
@@ -24,7 +25,7 @@ public class SearchController : Controller // Ensure the controller inherits fro
                         (b.Author?.FullName?.ToLower().Contains(q.ToLower()) ?? false))
             .ToList();
 
-        var filteredAuthors = _context.Author.Where(b => b.Name.ToLower().Contains(q.ToLower()) || b.LastName.ToLower().Contains(q.ToLower()))
+        var filteredAuthors = _context.Authors.Where(b => b.Name.ToLower().Contains(q.ToLower()) || b.LastName.ToLower().Contains(q.ToLower()))
             .ToList();
 
         var viewModel = new SearchResultsViewModel()

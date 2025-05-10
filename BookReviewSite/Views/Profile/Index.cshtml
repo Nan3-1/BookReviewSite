@@ -1,0 +1,50 @@
+﻿@model BookReviewSite.ViewModels.ProfileViewModel
+
+<div class="profile-header">
+    <img src="@Model.ProfilePicture" alt="Profile Picture" class="profile-picture">
+    <h1>@Model.UserName</h1>
+    <p>@Model.Bio</p>
+    <a asp-action="Edit" class="btn btn-primary">Edit Profile</a>
+</div>
+
+<div class="dashboard">
+    <!-- Repeat this section for each book list -->
+    <div class="book-list">
+        <h2>Favorite Books <button class="toggle-list">See More</button></h2>
+        <div class="list-items">
+            @foreach (var book in Model.FavoriteBooks.Take(3))
+            {
+                <div class="book-item">
+                    <h3>@book.Book.Title</h3>
+                    <!-- Add remove button -->
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="reviews">
+        <h2>Recent Reviews</h2>
+        @foreach (var review in Model.Reviews)
+        {
+            <div class="review">
+                <h4>@review.Book.Title</h4>
+                <p>@review.Content</p>
+                <small>@review.CreatedAt.ToString("d")</small>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Toggle list visibility
+        document.querySelectorAll('.toggle-list').forEach(button => {
+            button.addEventListener('click', () => {
+                const list = button.closest('.book-list').querySelector('.list-items');
+                list.classList.toggle('expanded');
+                button.textContent = list.classList.contains('expanded') ? 'See Less' : 'See More';
+            });
+        });
+    </script>
+}
