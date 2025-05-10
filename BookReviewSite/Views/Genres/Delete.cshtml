@@ -1,28 +1,54 @@
-﻿@using BookReviewSite.Data.Entities
+﻿﻿@using BookReviewSite.Data.Entities
 @model Genre
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Delete Genre";
 }
+<head>
+    <link rel="stylesheet" href="~/css/ViewStyle.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
-<h1>Delete</h1>
+</head>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h4><i class="fas fa-exclamation-triangle me-2"></i>@ViewData["Title"]</h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="text-danger">Are you sure you want to delete this genre?</h5>
+                    <div class="alert alert-warning mt-3">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <strong>Warning:</strong> This action cannot be undone.
+                    </div>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Genre</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="GenreId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+                    <div class="mb-4">
+                        <h5>Genre Information</h5>
+                        <hr />
+                        <dl class="row">
+                            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Name)</dt>
+                            <dd class="col-sm-9">
+                                <span class="badge bg-secondary p-2">
+                                    @Html.DisplayFor(model => model.Name)
+                                </span>
+                            </dd>
+                        </dl>
+                    </div>
+
+                    <form asp-action="Delete">
+                        <input type="hidden" asp-for="GenreId" />
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash-alt me-1"></i> Confirm Delete
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
