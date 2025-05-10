@@ -99,6 +99,7 @@ namespace BookReviewSite.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["Genres"] = new MultiSelectList(_context.Genre, "GenreId", "Name", model.GenreIds);
             ViewData["AuthorId"] = new SelectList(_context.Author, "AuthorId", "FullName", model.AuthorId);
             return View(model);
         }
