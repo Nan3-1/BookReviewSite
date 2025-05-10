@@ -1,4 +1,4 @@
-﻿namespace BookReview.Data.Entities
+﻿namespace BookReviewSite.Data.Entities
 {
     public class Genre
     {

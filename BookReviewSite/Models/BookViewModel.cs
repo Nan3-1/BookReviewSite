@@ -1,5 +1,6 @@
-﻿using BookReview.Data.Entities;
+﻿using BookReviewSite.Data.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace BookReviewSite.Models
 {

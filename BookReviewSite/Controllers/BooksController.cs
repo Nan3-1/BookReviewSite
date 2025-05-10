@@ -7,11 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookReviewSite.Data;
 using BookReviewSite.Models;
+
+using BookReviewSite.Data.Entities;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using BookReviewSite.Data.Entities;
-using BookReview.Data.Entities;
-using BookReview.Models;
 using BookReviewSite.ViewModels;
 
 namespace BookReviewSite.Controllers
@@ -40,9 +41,14 @@ namespace BookReviewSite.Controllers
             // Apply filters
             if (!string.IsNullOrEmpty(searchString))
             {
+
+                // Simple case-insensitive search on Title and Author
+                books = books.Where(b =>
+                    b.Title.Contains(searchString, StringComparison.CurrentCultureIgnoreCase))
                 booksQuery = booksQuery.Where(b =>
                     b.Title.Contains(searchString));
             }
+
 
             if (!string.IsNullOrEmpty(genreFilter))
             {
@@ -57,25 +63,6 @@ namespace BookReviewSite.Controllers
             }
 
             var books = await booksQuery.ToListAsync();
-
-            // Add user-specific data if authenticated
-            //if (User.Identity.IsAuthenticated)
-            //{
-            //    var userId = _userManager.GetUserId(User);
-            //    var userBooks = await _context.UserBooks
-            //        .Where(ub => ub.UserId == userId)
-            //        .ToListAsync();
-
-            //    foreach (var book in books)
-            //    {
-            //        var userBook = userBooks.FirstOrDefault(ub => ub.BookId == book.Id);
-            //        if (userBook != null)
-            //        {
-            //            ViewData[$"IsFavorite_{book.Id}"] = userBook.IsFavorite;
-            //            ViewData[$"ReadingStatus_{book.Id}"] = userBook.Status;
-            //        }
-            //    }
-            //}
 
 
 
@@ -99,7 +86,12 @@ namespace BookReviewSite.Controllers
             {
                 return NotFound();
             }
+                 var reviews = await _context.Review
+                .Where(r => r.BookId == book.BookId)
+                .OrderByDescending(r => r.DatePosted)
+                .ToListAsync();
 
+            ViewBag.Reviews = reviews;
             return View(book);
         }
 
@@ -121,6 +113,21 @@ namespace BookReviewSite.Controllers
 
         private async Task<List<Book>> GetUserBooksByStatus(string userId, BookStatusType status)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var book = _context.Book
+                .Include(b => b.Author)
+                .Include(b => b.Genres)
+                .Where(b => b.BookId == id.Value)
+                .FirstOrDefault();
+           
+            ViewData["Genres"] = new MultiSelectList(_context.Genre, "GenreId", "Name", model.GenreIds);
+            ViewData["AuthorId"] = new SelectList(_context.Author, "AuthorId", "FullName", book.AuthorId);
+            return View(model);
+            
             var query = _context.UserBooks
                 .Where(ub => ub.UserId == userId);
 

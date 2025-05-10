@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using BookReview.Data;
 using Microsoft.EntityFrameworkCore;
-using BookReview.Models;
-using BookReview.Data.Entities;
+using BookReviewSite.Models;
 using BookReviewSite.Data;
 
 public class SearchController : Controller // Ensure the controller inherits from Controller
@@ -21,11 +19,12 @@ public class SearchController : Controller // Ensure the controller inherits fro
             .ToListAsync();
 
         var filteredBooks = books
-            .Where(b => b.Title.ToLower().Contains(q.ToLower()) ||
-                        (b.Author?.FullName?.ToLower().Contains(q.ToLower()) ?? false))
+            .Where(b => b.Title.Contains(q, StringComparison.CurrentCultureIgnoreCase) ||
+                        (b.Author?.FullName?.ToLower().Contains(q, StringComparison.CurrentCultureIgnoreCase) ?? false))
             .ToList();
 
-        var filteredAuthors = _context.Authors.Where(b => b.Name.ToLower().Contains(q.ToLower()) || b.LastName.ToLower().Contains(q.ToLower()))
+        var filteredAuthors = _context.Author.Where(b => b.Name.Contains(q, StringComparison.CurrentCultureIgnoreCase) || b.LastName.Contains(q, StringComparison.CurrentCultureIgnoreCase))
+
             .ToList();
 
         var viewModel = new SearchResultsViewModel()
@@ -35,6 +34,6 @@ public class SearchController : Controller // Ensure the controller inherits fro
             Authors = filteredAuthors
         };
 
-        return View(viewModel); // ✅ This matches the @model in your view
+        return View(viewModel); 
     }
 }

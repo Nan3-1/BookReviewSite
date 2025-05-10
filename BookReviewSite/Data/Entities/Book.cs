@@ -1,6 +1,6 @@
+﻿namespace BookReviewSite.Data.Entities
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BookReview.Data.Entities
 {
     public class Book
     {
