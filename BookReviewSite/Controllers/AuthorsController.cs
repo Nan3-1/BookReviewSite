@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookReview.Data;
 using BookReview.Data.Entities;
+using BookReviewSite.Data;
 
 namespace BookReviewSite.Controllers
 {
@@ -22,7 +23,7 @@ namespace BookReviewSite.Controllers
         // GET: Authors
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Author.ToListAsync());
+            return View(await _context.Authors.ToListAsync());
         }
 
         // GET: Authors/Details/5
@@ -33,7 +34,7 @@ namespace BookReviewSite.Controllers
                 return NotFound();
             }
 
-            var author = await _context.Author
+            var author = await _context.Authors
                 .FirstOrDefaultAsync(m => m.AuthorId == id);
             if (author == null)
             {
@@ -73,7 +74,7 @@ namespace BookReviewSite.Controllers
                 return NotFound();
             }
 
-            var author = await _context.Author.FindAsync(id);
+            var author = await _context.Authors.FindAsync(id);
             if (author == null)
             {
                 return NotFound();
@@ -124,7 +125,7 @@ namespace BookReviewSite.Controllers
                 return NotFound();
             }
 
-            var author = await _context.Author
+            var author = await _context.Authors
                 .FirstOrDefaultAsync(m => m.AuthorId == id);
             if (author == null)
             {
@@ -139,10 +140,10 @@ namespace BookReviewSite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var author = await _context.Author.FindAsync(id);
+            var author = await _context.Authors.FindAsync(id);
             if (author != null)
             {
-                _context.Author.Remove(author);
+                _context.Authors.Remove(author);
             }
 
             await _context.SaveChangesAsync();
@@ -151,7 +152,7 @@ namespace BookReviewSite.Controllers
 
         private bool AuthorExists(int id)
         {
-            return _context.Author.Any(e => e.AuthorId == id);
+            return _context.Authors.Any(e => e.AuthorId == id);
         }
     }
 }
