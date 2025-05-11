@@ -1,4 +1,5 @@
-﻿namespace BookReviewSite.Data.Entities
+﻿using BookReviewSite.Data.Entities;
+namespace BookReviewSite.Data.Entities
 {
     public class Author
     {

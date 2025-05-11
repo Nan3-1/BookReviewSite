@@ -313,6 +313,7 @@ namespace BookReviewSite.Controllers
             ViewData["AuthorId"] = new SelectList(_context.Authors, "AuthorId", "FullName", model.AuthorId);
             return View(model);
         }
+        
 
         // GET: Books/Delete/5
         public async Task<IActionResult> Delete(int? id)

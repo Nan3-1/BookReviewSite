@@ -2,50 +2,48 @@
 @model Book
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Book Details";
 }
 
-<h1>Book Details</h1>
+<h1>@Model.Title</h1>
 
-<div>
-    <h4>Book</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-
-        <dt class="col-sm-2">
-            Author
-        </dt>
-        <dd class="col-sm-10">
-            @Model.Author?.FullName
-        </dd>
-    </dl>
+<!-- Add Create Review Button -->
+<div class="mb-4">
+    <a asp-controller="Reviews"
+       asp-action="Create"
+       asp-route-bookId="@Model.BookId"
+       class="btn btn-primary">
+        <i class="fas fa-edit"></i> Write a Review
+    </a>
 </div>
 
-<h4>Leave a Review</h4>
-<form asp-controller="Reviews" asp-action="CreateFromBook" method="post">
-    <input type="hidden" name="BookId" value="@Model.BookId" />
-
-    <div class="form-group">
-        <label for="ReviewRating">Rating (1–5)</label>
-        <input type="number" name="ReviewRating" class="form-control" min="1" max="5" required />
+<!-- Existing Book Details -->
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-subtitle mb-3 text-muted">by @Model.Author?.FullName</h5>
+        
     </div>
-
-    <div class="form-group">
-        <label for="ReviewContent">Your Review</label>
-        <textarea name="ReviewContent" class="form-control" rows="4" required></textarea>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Submit Review</button>
-</form>
-
-<hr />
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.BookId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
 </div>
+
+<!-- Reviews Section -->
+<h3>Reader Reviews</h3>
+@foreach (var review in Model.Reviews)
+{
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5>@review.ReviewerName</h5>
+            <div class="text-warning">
+                @for (int i = 0; i < review.ReviewRating; i++)
+                {
+                    <i class="fas fa-star"></i>
+                }
+            </div>
+            <p class="mt-2">@review.ReviewContent</p>
+            <small class="text-muted">
+                Reviewed on @review.CreatedAt.ToString("MMMM dd, yyyy")
+            </small>
+        </div>
+    </div>
+}
+
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>

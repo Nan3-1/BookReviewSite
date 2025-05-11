@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookReviewSite.Data.Entities;
 using BookReviewSite.Data;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BookReviewSite.Controllers
 {
@@ -21,46 +22,51 @@ namespace BookReviewSite.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
         // GET: Reviews/Details/5
-        [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var review = await _context.Reviews
-                .Include(r => r.Book) // Include related Book data if needed
-                .FirstOrDefaultAsync(r => r.ReviewId == id);
+            var book = await _context.Books
+                .Include(b => b.Author)
+                .Include(b => b.Reviews)  // Make sure to include reviews
+                .FirstOrDefaultAsync(b => b.BookId == id);
 
-            if (review == null)
+            if (book == null) return NotFound();
+
+            // Handle validation errors from review submission
+            if (TempData["ReviewErrors"] is ModelStateDictionary modelState)
             {
-                return NotFound();
+                ModelState.Merge(modelState);
             }
 
-            return View(review);
+            return View(book);
         }
 
         // GET: Reviews/Create
 
         // GET: Reviews/Create
         // GET: Reviews/CreateFromBook
-        public IActionResult CreateFromBook(int bookId)
+        // GET: Reviews/Create
+        // GET: Reviews/Create
+        public IActionResult Create(int bookId)
         {
-            ViewBag.BookId = new SelectList(_context.Books, "BookId", "Title", bookId);
-            return View("Create");
+            var book = _context.Books.Find(bookId);
+            if (book == null) return NotFound();
+
+            return View(new Review { BookId = bookId });
         }
 
-        // POST: Reviews/CreateFromBook
+        // POST: Reviews/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Review review)
         {
             if (ModelState.IsValid)
             {
+                review.CreatedAt = DateTime.UtcNow;
                 _context.Add(review);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Books", new { id = review.BookId });
             }
-
-            // If invalid, redirect back to Book Details with errors
-            TempData["ReviewErrors"] = ModelState;
-            return RedirectToAction("Details", "Books", new { id = review.BookId });
+            return View(review);
         }
         // GET: Reviews/Edit/5
         public async Task<IActionResult> Edit(int? id)
