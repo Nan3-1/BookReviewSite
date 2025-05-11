@@ -27,7 +27,7 @@ namespace BookReviewSite
            using (var scope = app.Services.CreateScope())
            {
               var services = scope.ServiceProvider;
-              DataSeeder.Initialize(services).Wait();
+              DataSeeder.Initialize(services);
 
            }
             // Configure the HTTP request pipeline.

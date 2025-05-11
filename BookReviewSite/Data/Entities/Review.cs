@@ -12,14 +12,14 @@ using BookReviewSite.Data.Entities;
         public string ReviewerName { get; set; }
         public string ReviewContent { get; set; }
         public string UserId { get; set; }
-        public ApplicationUser User { get; set; }
+        public virtual ApplicationUser User { get; set; }
 
         public int ReviewRating { get; set; }
         public int BookId { get; set; } 
 
         public virtual Book? Book { get; set; }
         public DateTime DatePosted { get; set; }
+  
 
-
-    }
+}
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookReviewSite.Data.Entities;
@@ -25,16 +21,13 @@ namespace BookReviewSite.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
         // GET: Reviews/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var review = await _context.Reviews
-                .Include(r => r.Book)
-                .FirstOrDefaultAsync(m => m.ReviewId == id);
+                .Include(r => r.Book) // Include related Book data if needed
+                .FirstOrDefaultAsync(r => r.ReviewId == id);
+
             if (review == null)
             {
                 return NotFound();
@@ -44,27 +37,30 @@ namespace BookReviewSite.Controllers
         }
 
         // GET: Reviews/Create
-        public IActionResult Create()
+
+        // GET: Reviews/Create
+        // GET: Reviews/CreateFromBook
+        public IActionResult CreateFromBook(int bookId)
         {
-            ViewData["BookId"] = new SelectList(_context.Books, "BookId", "BookId");
-            return View();
+            ViewBag.BookId = new SelectList(_context.Books, "BookId", "Title", bookId);
+            return View("Create");
         }
 
-        // POST: Reviews/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Reviews/CreateFromBook
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ReviewId,ReviewContent,ReviewRating,BookId")] Review review)
+        public async Task<IActionResult> Create(Review review)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(review);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Books", new { id = review.BookId });
             }
-            ViewData["BookId"] = new SelectList(_context.Books, "BookId", "BookId", review.BookId);
-            return View(review);
+
+            // If invalid, redirect back to Book Details with errors
+            TempData["ReviewErrors"] = ModelState;
+            return RedirectToAction("Details", "Books", new { id = review.BookId });
         }
         // GET: Reviews/Edit/5
         public async Task<IActionResult> Edit(int? id)

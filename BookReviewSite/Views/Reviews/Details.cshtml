@@ -1,36 +1,48 @@
-﻿@model Review
+﻿@using BookReviewSite.Data.Entities
+@model Review
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Review Details";
 }
 
-<h1>Details</h1>
+<h1>Review Details</h1>
 
 <div>
     <h4>Review</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ReviewerName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ReviewerName)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ReviewContent)
+        </dt>
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ReviewContent)
         </dd>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ReviewRating)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ReviewRating)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ReviewRating)/5
         </dd>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Book)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Book.BookId)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Book.Title)
         </dd>
     </dl>
 </div>
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.ReviewId">Edit</a> ||
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.ReviewId" class="btn btn-warning">Edit</a>
+    <a asp-action="Delete" asp-route-id="@Model.ReviewId" class="btn btn-danger">Delete</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>
