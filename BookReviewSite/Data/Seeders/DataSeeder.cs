@@ -113,7 +113,7 @@ namespace BookReviewSite.Data.Seeders
                       Title = "IT",
                       GenreId = 5,
                       AuthorId = 7
-                    },
+                    }
             };
             if (context.Books.Count() == 0)
             {
@@ -138,7 +138,7 @@ namespace BookReviewSite.Data.Seeders
                 new Genre() { Name = "Biography"},
                 new Genre() { Name = "Dystopian"},
                 new Genre() { Name = "Adventure"},
-                new Genre() { Name = "Epic-Fantasy"},
+                new Genre() { Name = "Epic-Fantasy"}
             };
             if (context.Genres.Count() == 0)
             {
