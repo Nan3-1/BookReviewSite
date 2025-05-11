@@ -18,14 +18,12 @@ namespace BookReviewSite.Controllers
         {
             _context = context;
         }
-
         // GET: Reviews
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Reviews.Include(r => r.Book);
             return View(await applicationDbContext.ToListAsync());
         }
-
         // GET: Reviews/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -68,7 +66,6 @@ namespace BookReviewSite.Controllers
             ViewData["BookId"] = new SelectList(_context.Books, "BookId", "BookId", review.BookId);
             return View(review);
         }
-
         // GET: Reviews/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -121,7 +118,6 @@ namespace BookReviewSite.Controllers
             ViewData["BookId"] = new SelectList(_context.Books, "BookId", "BookId", review.BookId);
             return View(review);
         }
-
         // GET: Reviews/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

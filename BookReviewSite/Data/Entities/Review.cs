@@ -9,7 +9,6 @@ using BookReviewSite.Data.Entities;
         public string Content { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-
         public string ReviewerName { get; set; }
         public string ReviewContent { get; set; }
         public string UserId { get; set; }
@@ -19,8 +18,7 @@ using BookReviewSite.Data.Entities;
         public int BookId { get; set; } 
 
         public virtual Book? Book { get; set; }
-        [NotMapped]
-        public object DatePosted { get; internal set; }
+        public DateTime DatePosted { get; set; }
 
 
     }

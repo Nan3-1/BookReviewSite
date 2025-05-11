@@ -5,7 +5,7 @@ using BookReviewSite.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookReview
+namespace BookReviewSite
 {
     public class Program
     {

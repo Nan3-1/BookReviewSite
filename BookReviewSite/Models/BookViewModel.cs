@@ -14,7 +14,7 @@ namespace BookReviewSite.Models
         public List<Book> AllBooks { get; set; } = new List<Book>();
         public HashSet<int> FavoriteBookIds { get; set; } = new HashSet<int>();
         public HashSet<int> CurrentlyReadingIds { get; set; } = new HashSet<int>();
-        public HashSet<int> WantToReadIds { get; set; } = new HashSet<int>();
+        public HashSet<int> WantToReadIds { get; set; } = [];
 
         [NotMapped] // This ensures EF won't try to map it to the database
         public bool IsFavorite { get; set; }

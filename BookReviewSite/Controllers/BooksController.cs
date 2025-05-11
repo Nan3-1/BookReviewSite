@@ -12,18 +12,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BookReviewSite.Controllers
 {
-    public class BooksController : Controller
+    public class BooksController(
+        ApplicationDbContext context,
+        UserManager<ApplicationUser> userManager) : Controller
     {
-        private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationDbContext _context = context;
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-        public BooksController(
-            ApplicationDbContext context,
-            UserManager<ApplicationUser> userManager)
-        {
-            _context = context;
-            _userManager = userManager;
-        }
         public virtual ICollection<Author>? Authors { get; set; }
 
         // GET: Books
@@ -74,6 +69,8 @@ namespace BookReviewSite.Controllers
             }
 
             var book = await _context.Books
+                .Include(b => b.Genres)
+                .Include(b => b.Reviews)
                 .Include(b => b.Author)
                 .FirstOrDefaultAsync(m => m.BookId == id);
 
@@ -85,7 +82,7 @@ namespace BookReviewSite.Controllers
             // Fetch reviews for the book
             var reviews = await _context.Reviews
                 .Where(r => r.BookId == book.BookId)
-                .OrderByDescending(r => r.DatePosted) // Perform ordering on the server side
+                .OrderByDescending(r => r.DatePosted) // Perform ordering on the queryable collection
                 .ToListAsync(); // Convert to a list asynchronously
 
             ViewBag.Reviews = reviews; // Pass reviews to the view
@@ -142,9 +139,6 @@ namespace BookReviewSite.Controllers
 
             return View(wantsToRead);
         }
-
-
-
         private async Task<List<Book>> GetUserBooksByStatus(string userId, BookStatusType status)
         {
             return await _context.UserBooks
